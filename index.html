@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>You’re Doing Amazing ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #ffd1dc, #fff);
+  text-align: center;
+  color: #444;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #ff4f8b;
+}
+
+#heart {
+  font-size: 80px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+#heart:active {
+  transform: scale(1.2);
+}
+
+.progress {
+  margin: 20px 0;
+  background: #eee;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 20px;
+  width: 0%;
+  background: #ff4f8b;
+  transition: width 0.3s;
+}
+
+.message {
+  margin-top: 15px;
+  min-height: 50px;
+  font-size: 16px;
+}
+
+.hidden {
+  display: none;
+}
+
+.typing {
+  font-size: 16px;
+  white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <!-- START -->
+    <div id="start">
+      <h1>🎮 Mini Game</h1>
+      <p>
+        This game is for someone who wakes up early,  
+        comes home late,  
+        and still keeps going 💗
+      </p>
+      <button onclick="startGame()">Start</button>
+    </div>
+
+    <!-- GAME -->
+    <div id="game" class="hidden">
+      <h1>Collect Strength 💖</h1>
+      <p>Tap the heart to gain energy</p>
+
+      <div id="heart">💖</div>
+
+      <div class="progress">
+        <div class="bar" id="bar"></div>
+      </div>
+
+      <div class="message" id="msg"></div>
+    </div>
+
+    <!-- FINAL -->
+    <div id="final" class="hidden">
+      <h1>💗 You Made It</h1>
+      <div class="typing" id="typing"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let energy = 0;
+const messages = [
+  "I know the JB to SG journey drains you 😞",
+  "Waking up at 5am takes real strength 🌅",
+  "Coming home at 10pm is not easy",
+  "You carry so many responsibilities",
+  "Bills, commitments, expectations…",
+  "And yet, you still keep going",
+  "Even when you’re tired",
+  "Even when you feel like giving up",
+  "I’m so proud of you 🤍"
+];
+
+function startGame() {
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+}
+
+document.getElementById('heart').onclick = () => {
+  if (energy >= 100) return;
+
+  energy += 10;
+  document.getElementById('bar').style.width = energy + "%";
+
+  const msg = messages[Math.floor(Math.random() * messages.length)];
+  document.getElementById('msg').innerText = msg;
+
+  if (energy >= 100) {
+    setTimeout(showFinal, 500);
+  }
+};
+
+function showFinal() {
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('final').classList.remove('hidden');
+
+  const text = 
+`I know you’re tired.
+I know some days feel too heavy.
+
+But please remember this…
+
+You are strong.
+You are doing your best.
+And your effort matters.
+
+You don’t have to be okay all the time.
+I’m here, always supporting you.
+
+You’re not alone 🤍`;
+
+  typeText(text);
+}
+
+function typeText(text) {
+  let i = 0;
+  const el = document.getElementById("typing");
+  const interval = setInterval(() => {
+    el.innerText += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, 40);
+}
+</script>
+
+</body>
+</html>
