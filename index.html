@@ -14,16 +14,16 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom, #ffd1dc, #fff);
-  color: #444;
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  color: #444;
 }
 
 .container {
   width: 100%;
-  max-width: 600px; /* good for 1080p */
+  max-width: 600px;
   padding: 20px;
 }
 
@@ -33,6 +33,12 @@ body {
   padding: 30px 25px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   position: relative;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 h1 {
@@ -54,18 +60,12 @@ button:hover {
   opacity: 0.9;
 }
 
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .icon-btn {
   background: none;
-  color: var(--pink);
   border: none;
   font-size: 16px;
   cursor: pointer;
+  color: var(--pink);
 }
 
 #heart {
@@ -99,24 +99,20 @@ button:hover {
   font-size: 16px;
 }
 
+.typing {
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: normal;
+}
+
 .hidden {
   display: none;
 }
 
-.typing {
-  font-size: 16px;
-  white-space: pre-line;
-  line-height: 1.6;
-}
-
-/* Mobile tweak */
+/* Mobile friendly */
 @media (max-width: 480px) {
-  h1 {
-    font-size: 22px;
-  }
-  #heart {
-    font-size: 70px;
-  }
+  h1 { font-size: 22px; }
+  #heart { font-size: 70px; }
 }
 </style>
 </head>
@@ -132,7 +128,7 @@ button:hover {
       <button class="icon-btn" onclick="toggleMusic()">🎵 Music</button>
     </div>
 
-    <!-- START -->
+    <!-- START SCREEN -->
     <div id="start">
       <h1>🎮 Mini Game</h1>
       <p>
@@ -143,7 +139,7 @@ button:hover {
       <button onclick="startGame()">Start</button>
     </div>
 
-    <!-- GAME -->
+    <!-- GAME SCREEN -->
     <div id="game" class="hidden">
       <h1>Collect Strength 💖</h1>
       <p>Tap the heart to gain energy</p>
@@ -157,7 +153,7 @@ button:hover {
       <div class="message" id="msg"></div>
     </div>
 
-    <!-- FINAL -->
+    <!-- FINAL SCREEN -->
     <div id="final" class="hidden">
       <h1>💗 You Made It</h1>
       <div class="typing" id="typing"></div>
@@ -191,7 +187,6 @@ function startGame() {
   document.getElementById('start').classList.add('hidden');
   document.getElementById('game').classList.remove('hidden');
 
-  // autoplay music after interaction
   if (!musicOn) {
     document.getElementById('bgMusic').play();
     musicOn = true;
@@ -202,7 +197,7 @@ function goHome() {
   energy = 0;
   document.getElementById('bar').style.width = "0%";
   document.getElementById('msg').innerText = "";
-  document.getElementById('typing').innerText = "";
+  document.getElementById('typing').innerHTML = "";
 
   document.getElementById('game').classList.add('hidden');
   document.getElementById('final').classList.add('hidden');
@@ -259,9 +254,14 @@ You’re not alone 🤍`;
 function typeText(text) {
   let i = 0;
   const el = document.getElementById("typing");
-  el.innerText = "";
+  el.innerHTML = "";
+
   const interval = setInterval(() => {
-    el.innerText += text[i];
+    if (text[i] === "\n") {
+      el.innerHTML += "<br>";
+    } else {
+      el.innerHTML += text[i];
+    }
     i++;
     if (i >= text.length) clearInterval(interval);
   }, 40);
