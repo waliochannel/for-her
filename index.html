@@ -6,35 +6,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root {
+  --pink: #ff4f8b;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom, #ffd1dc, #fff);
-  text-align: center;
   color: #444;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
-  max-width: 500px;
-  margin: auto;
-  padding: 30px 20px;
+  width: 100%;
+  max-width: 600px; /* good for 1080p */
+  padding: 20px;
 }
 
 .card {
   background: white;
   border-radius: 20px;
-  padding: 25px;
+  padding: 30px 25px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  position: relative;
 }
 
 h1 {
-  color: #ff4f8b;
+  color: var(--pink);
+  margin-top: 10px;
+}
+
+button {
+  background: var(--pink);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-btn {
+  background: none;
+  color: var(--pink);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 #heart {
   font-size: 80px;
   cursor: pointer;
   transition: transform 0.1s;
+  margin: 10px 0;
 }
 
 #heart:active {
@@ -51,7 +89,7 @@ h1 {
 .bar {
   height: 20px;
   width: 0%;
-  background: #ff4f8b;
+  background: var(--pink);
   transition: width 0.3s;
 }
 
@@ -68,6 +106,17 @@ h1 {
 .typing {
   font-size: 16px;
   white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* Mobile tweak */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 22px;
+  }
+  #heart {
+    font-size: 70px;
+  }
 }
 </style>
 </head>
@@ -77,12 +126,18 @@ h1 {
 <div class="container">
   <div class="card">
 
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <button class="icon-btn" onclick="goHome()">🏠 Home</button>
+      <button class="icon-btn" onclick="toggleMusic()">🎵 Music</button>
+    </div>
+
     <!-- START -->
     <div id="start">
       <h1>🎮 Mini Game</h1>
       <p>
-        This game is for someone who wakes up early,  
-        comes home late,  
+        This game is for someone who wakes up early,<br>
+        comes home late,<br>
         and still keeps going 💗
       </p>
       <button onclick="startGame()">Start</button>
@@ -111,8 +166,15 @@ h1 {
   </div>
 </div>
 
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 let energy = 0;
+let musicOn = false;
+
 const messages = [
   "I know the JB to SG journey drains you 😞",
   "Waking up at 5am takes real strength 🌅",
@@ -128,6 +190,34 @@ const messages = [
 function startGame() {
   document.getElementById('start').classList.add('hidden');
   document.getElementById('game').classList.remove('hidden');
+
+  // autoplay music after interaction
+  if (!musicOn) {
+    document.getElementById('bgMusic').play();
+    musicOn = true;
+  }
+}
+
+function goHome() {
+  energy = 0;
+  document.getElementById('bar').style.width = "0%";
+  document.getElementById('msg').innerText = "";
+  document.getElementById('typing').innerText = "";
+
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('final').classList.add('hidden');
+  document.getElementById('start').classList.remove('hidden');
+}
+
+function toggleMusic() {
+  const music = document.getElementById('bgMusic');
+  if (music.paused) {
+    music.play();
+    musicOn = true;
+  } else {
+    music.pause();
+    musicOn = false;
+  }
 }
 
 document.getElementById('heart').onclick = () => {
@@ -148,7 +238,7 @@ function showFinal() {
   document.getElementById('game').classList.add('hidden');
   document.getElementById('final').classList.remove('hidden');
 
-  const text = 
+  const text =
 `I know you’re tired.
 I know some days feel too heavy.
 
@@ -169,6 +259,7 @@ You’re not alone 🤍`;
 function typeText(text) {
   let i = 0;
   const el = document.getElementById("typing");
+  el.innerText = "";
   const interval = setInterval(() => {
     el.innerText += text[i];
     i++;
